@@ -138,17 +138,7 @@ public class HonorCardGame : MonoBehaviour
         bool hasWon = WonGame();
 
         // Evaluates if the game has been won and acts accordingly.
-        if (!hasWon)
-        {
-            Debug.Log("I discarded " + discardCard + " and drew " + drawCard + ". ");
-            Debug.Log("My hand is: ");
-            for (int i = 0; i < _HandList.Count; i++)
-            {
-                Debug.Log("- " + _HandList[i]);
-            }
-            Debug.Log("This is not a winning hand. I will attempt to play another round.");
-        }
-        else if (hasWon)
+        if (hasWon)
         {
             Debug.Log("I discarded " + discardCard + " and drew " + drawCard + ". ");
             Debug.Log("My hand is: ");
@@ -161,6 +151,16 @@ public class HonorCardGame : MonoBehaviour
         else if (_DeckStack.Count == 0)
         {
             Debug.Log("The deck is empty. The game is LOST.");
+        }
+        else
+        {
+            Debug.Log("I discarded " + discardCard + " and drew " + drawCard + ". ");
+            Debug.Log("My hand is: ");
+            for (int i = 0; i < _HandList.Count; i++)
+            {
+                Debug.Log("- " + _HandList[i]);
+            }
+            Debug.Log("This is not a winning hand. I will attempt to play another round.");
         }
     }
 }
