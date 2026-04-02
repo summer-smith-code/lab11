@@ -30,9 +30,9 @@ public class HonorCardGame : MonoBehaviour
     void Update()
     {
         // While loop runs until the player either wins the game or the deck runs out of cards.
-        while (!WonGame(_deckSuits) && _DeckStack.Count != 0)
+        while (!WonGame() && _DeckStack.Count != 0)
         {
-
+            DiscardDraw();
         }
     }
 
@@ -40,7 +40,7 @@ public class HonorCardGame : MonoBehaviour
     private void CreateDeck(int deckLimit, int suitAmount)
     {
         // Creates a string array that contains the symbol for each suit in the deck.
-        string[] suits = new string[suitAmount]
+        string[] suits = new string[]
         { "\u2663", "\u2660", "\u2665", "\u2666" }; // Clubs, Spades, Hearts, Diamonds
 
 
@@ -83,10 +83,11 @@ public class HonorCardGame : MonoBehaviour
         }
     }
 
-    private bool WonGame(int suitAmount)
+    // Helper method to evaluate if the game has been won yet.
+    private bool WonGame()
     {
         // Used to store how many of each suit is in the player's hand.
-        int[] suitCount = new int[suitAmount]; 
+        int[] suitCount = new int[_deckSuits]; 
 
         // Checks each string to see how many of each suit it contains, storing the amount in suitCount.
         foreach (string card in _HandList)
@@ -122,4 +123,44 @@ public class HonorCardGame : MonoBehaviour
         return false;
     }
 
+    // Helper method to discard and draw a new card in hand and in the deck respectively. Evaluates if the game is won as well.
+    private void DiscardDraw()
+    {
+        // Selects a random card in hand to discard.
+        int discarded = Random.Range(0, _HandList.Count);
+
+        // Stores the discarded and drawn cards for printing.
+        string discardCard = _HandList[discarded];
+        string drawCard = _DeckStack.Pop();
+        _HandList[discarded] = drawCard;
+
+        // Determines if the player has won based on their hand. It is stored in a bool so WonGame() is not repeatedly invoked.
+        bool hasWon = WonGame();
+
+        // Evaluates if the game has been won and acts accordingly.
+        if (!hasWon)
+        {
+            Debug.Log("I discarded " + discardCard + " and drew " + drawCard + ". ");
+            Debug.Log("My hand is: ");
+            for (int i = 0; i < _HandList.Count; i++)
+            {
+                Debug.Log("- " + _HandList[i]);
+            }
+            Debug.Log("This is not a winning hand. I will attempt to play another round.");
+        }
+        else if (hasWon)
+        {
+            Debug.Log("I discarded " + discardCard + " and drew " + drawCard + ". ");
+            Debug.Log("My hand is: ");
+            for (int i = 0; i < _HandList.Count; i++)
+            {
+                Debug.Log("- " + _HandList[i]);
+            }
+            Debug.Log("The game is WON!");
+        }
+        else if (_DeckStack.Count == 0)
+        {
+            Debug.Log("The deck is empty. The game is LOST.");
+        }
+    }
 }
